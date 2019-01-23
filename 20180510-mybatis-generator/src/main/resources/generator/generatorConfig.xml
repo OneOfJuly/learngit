@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!--
+        引入properties属性文件
+    -->
+    <properties resource="application.properties" />
+
+    <!--
+        mysql/oracle/....
+        代表了使用哪一种数据库进行连接
+    -->
+    <context id="mysql" targetRuntime="MyBatis3Simple">
+        <!--
+            开始配置逆向工程
+        -->
+        <commentGenerator>
+            <!--
+                suppressAllComments:为了自动生成的实体类添加注释，默认值为false
+                    如果在数据库中的表字段中添加了注释，则会自动生成，如果没有则不会
+            -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <!--
+            配置数据库的连接
+        -->
+        <jdbcConnection driverClass="${jdbc.driverClassName}"
+                        connectionURL="${jdbc.url}" userId="${jdbc.username}" password="${jdbc.password}">
+        </jdbcConnection>
+        <!--
+            所有数据库类型都不能对应java类型中的BigDecimal
+            number(5):0-99999
+            number(5,2):0.00-999.99
+            username:
+                varchar2(20)
+                Seven:5个长度
+                char(20)
+                Bob:20个长度
+        -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!--
+            生成开始
+            javaModelGenerator:标签代表了生成实体类的配置
+            targetPackage:实体类所生成的包位置
+                com.zzsxt.lee.mybatis.model
+            targetProject:目标包所指定的资源文件夹位置(src/main/java)
+            trimStrings:去除实体类名前后到的空格,默认为false
+            enableSubPackages:默认值为true 把schema作为包的后缀名
+        -->
+        <javaModelGenerator targetPackage="com.feng.springcloud.model"
+                            targetProject="./src/main/java">
+            <property name="enableSubPackages" value="false" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!--
+            配置mapper.xml
+            targetPackage:mapper(文件夹)
+            targetProject:src/main/resources
+        -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="./src/main/resources">
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+
+        <!--
+            配置mapper接口
+            和上面两个配置一样
+        -->
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="com.feng.springcloud.mapper" targetProject="./src/main/java">
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+
+        <!--
+            配置数据库映射
+            tableName:表名
+            domainObjectName:实体类的名字
+            generatedKey:主键的id是否自增长
+                column:指定主键为哪一列
+                sqlStatement:数据库的类型
+                identity:是否自增，默认值为false
+        -->
+        <table tableName="dept" domainObjectName="Dept">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true" />
+        </table>
+
+    </context>
+</generatorConfiguration>
